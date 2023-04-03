@@ -1,0 +1,31 @@
+Implement probability tables
+
+Key vocab
+- TAGS: list of all the POS tags 
+
+The initial probabilities over the POS tags (how likely each POS tag appears at the beginning of a sentence)
+
+- 1x91
+- X = number of times POS is the tag in the first word in a sentence
+- Y = total number of sentences in the training file
+- Initial probabiility for POStag = X/Y
+
+The transition probabilities from one POS tag to another: P(next | current) = P(S[t+1] | S[t])
+
+- 91x91
+- next = the next POS tag
+- current = current tag we are transitioning from next to 
+- X = number of times we observe current -> next for next in TAGS
+- Y = total number of times we observe current -> next for next in TAGS: all times current is a prior
+- probability for each tag is X/Y
+
+The observation probabilities from each POS tag to each observed word. P(word | POS) = P(e[t] | s[t])
+
+-
+- dictionary with s[t] (tags) as keys
+- icnrement count for evidence if observed as classified by tag
+- normalize counts
+
+Base cases
+- a tag is observed for a word that hasn't been recorded in training
+- A word is observed in test that hasn't been recorded in training
