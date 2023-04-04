@@ -71,8 +71,8 @@ def viterbi(E, S, I, T, M, uniqueWordIdxs):
     # I: Initial Probability Matrix
     # T: Transitional Probability Matrix: P(s[t+1] | s[t])
     # M: observation Probability Matrix: P(E[t] | S[t])
-    prob = np.zeros(len(E), len(S))
-    prev = np.zeros(len(E), len(S))
+    prob = np.zeros((len(E), len(S)))
+    prev = np.zeros((len(E), len(S)))
 
     # Determine values for time step 0
     for i in range(len(S)):
@@ -109,11 +109,11 @@ def getSolutionTags(prob, prev, TAGS, observations):
     startIdx = np.argmax(prob[-1])
     # solutions.insert(0, TAGS[startIdx])
     backtrack = [startIdx]
-    for i in range(len(prob)-1, -1):
+    for i in range(len(prob)-1, 0, -1):
         idx = backtrack[0]
         solutions.insert(0, TAGS[idx])
         prevTagIdx = prev[i][idx]
-        backtrack.insert(0, prevTagIdx)
+        backtrack.insert(0, int(prevTagIdx))
         # string the result
         temp = f'{observations[i]} : {TAGS[idx]}\n'
         solString = temp + solString        
@@ -133,37 +133,37 @@ def writeSolution(solString, outputFile):
 
 if __name__ == '__main__':
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--trainingfiles",
-        action="append",
-        nargs="+",
-        required=True,
-        help="The training files."
-    )
-    parser.add_argument(
-        "--testfile",
-        type=str,
-        required=True,
-        help="One test file."
-    )
-    parser.add_argument(
-        "--outputfile",
-        type=str,
-        required=True,
-        help="The output file."
-    )
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser()
+    # parser.add_argument(
+    #     "--trainingfiles",
+    #     action="append",
+    #     nargs="+",
+    #     required=True,
+    #     help="The training files."
+    # )
+    # parser.add_argument(
+    #     "--testfile",
+    #     type=str,
+    #     required=True,
+    #     help="One test file."
+    # )
+    # parser.add_argument(
+    #     "--outputfile",
+    #     type=str,
+    #     required=True,
+    #     help="The output file."
+    # )
+    # args = parser.parse_args()
 
-    training_list = args.trainingfiles[0]
-    print("training files are {}".format(training_list))
+    # training_list = args.trainingfiles[0]
+    # print("training files are {}".format(training_list))
 
-    print("test file is {}".format(args.testfile))
+    # print("test file is {}".format(args.testfile))
 
-    print("output file is {}".format(args.outputfile))
+    # print("output file is {}".format(args.outputfile))
 
 
-    print("Starting the tagging process.")
+    # print("Starting the tagging process.")
 
     ###################################################### Tags Initializer #################################################################################################
     # tags array: 91 total tags
@@ -185,7 +185,7 @@ if __name__ == '__main__':
 
     # divide the training set into sentences
     # for trainingList in args.inputfiles:
-    f = open(training_list) # OPEN THE TRAINING FILE: NEEED TO FIX THIS
+    f = open("mytraining.txt") # OPEN THE TRAINING FILE: NEEED TO FIX THIS
     lines = f.readlines()
 
     s = []
@@ -217,15 +217,16 @@ if __name__ == '__main__':
 
     ############################################################ Test Construction #########################################################################################
 
-    testSentences = makeObservationSet(args.testfile)
+    testSentences = makeObservationSet('mytesting.txt') #args.testfile
 
     ############################################################## Algorithm Run #########################################################################################
     solution = ''
     for test_sentence in testSentences:
         prob, prev = viterbi(test_sentence, TAGS, initProbs, transProbs, obsProbs, uniqueWordIdxs)
+        print(np.argmax(prob[-1]))
         solString = getSolutionTags(prob, prev, TAGS, test_sentence)
         solution += solString
     
-    writeSolution(solution, args.outputfile)
+    writeSolution(solution, 'myoutput.txt') # args.outputfile
 
     

@@ -32,6 +32,8 @@ f = open("atestsmall.txt")
 lines = f.readlines()
 #lines2 = [l.rstrip() for l in lines]
 
+f = open("testingsmall.txt")
+print([x.rstrip() for x in f.readlines()])
 s = []
 all_sentences = []
 for i, l in enumerate(lines):
@@ -150,8 +152,8 @@ for row, count in enumerate(tagCounts):
     if count != 0:
         obsProbs[row] /= count
 
-print(obsProbs[tagIdxs['NP0']][uniqueWordIdxs['Detective']])
-print(len(uniqueWordIdxs.keys()))
+# print(obsProbs[tagIdxs['NP0']][uniqueWordIdxs['Detective']])
+# print(len(uniqueWordIdxs.keys()))
 # print(obsProbs[tagIdxs['PUN'],uniqueWordIdxs['.']])
 # print(lines)
 # print(tagCounts)
