@@ -17,7 +17,8 @@ def makeInitialProbabilities(TAGS, tagIdxs, all_sentences):
 def makeTransitionProbabilities(TAGS, tagIdxs, all_sentences):
     # Matrix implementation
     # prior tag is the row, current tag is the column
-    transProbs = np.zeros((len(TAGS), len(TAGS)))
+    # implemented: laplace smoothing
+    transProbs = np.ones((len(TAGS), len(TAGS)))
     priorCounts = np.zeros((len(TAGS)))
 
     #print(transProbs)
@@ -31,7 +32,8 @@ def makeTransitionProbabilities(TAGS, tagIdxs, all_sentences):
             priorCounts[row_idx] += 1
     for row, count in enumerate(priorCounts):
         if count != 0:
-            transProbs[row] /= count
+            transProbs[row] /= (count+len(TAGS))
+        
     
     return transProbs
 
@@ -71,20 +73,30 @@ def viterbi(E, S, I, T, M, uniqueWordIdxs):
     # I: Initial Probability Matrix
     # T: Transitional Probability Matrix: P(s[t+1] | s[t])
     # M: observation Probability Matrix: P(E[t] | S[t])
-    prob = np.zeros(len(E), len(S))
-    prev = np.zeros(len(E), len(S))
+    prob = np.zeros((len(E), len(S)))
+    prev = np.zeros((len(E), len(S)))
 
     # Determine values for time step 0
     for i in range(len(S)):
-        prob[0, i] = I[i] * M[i, uniqueWordIdxs[E[0]]]
-        prev[0, i] = None
+        if E[0] not in uniqueWordIdxs:
+            prob[0, i] = I[i] 
+            prev[0, i] = None
+        else:
+            prob[0, i] = I[i] * M[i, uniqueWordIdxs[E[0]]]
+            prev[0, i] = None
     
     # for time steps 1 to length(E)-1, find each current state's most likely prior state
     for t in range(1, len(E)):
         for i in range(len(S)):
-            x = np.argmax(prob[t-1,:]* T[:,i]* M[i, uniqueWordIdxs[E[t]]])
-            prob[t, i] = prob[t-1, x] * T[x, i] * M[i, uniqueWordIdxs[E[t]]]
-            prev[t,i] = x
+            # base case: word in test is not in the training
+            if E[t] not in uniqueWordIdxs:
+                x = np.argmax(prob[t-1,:]* T[:,i])
+                prob[t, i] = prob[t-1, x] * T[x, i]
+                prev[t,i] = x
+            else:
+                x = np.argmax(prob[t-1,:]* T[:,i]* M[i, uniqueWordIdxs[E[t]]])
+                prob[t, i] = prob[t-1, x] * T[x, i] * M[i, uniqueWordIdxs[E[t]]]
+                prev[t,i] = x
     return prob, prev
 
 def makeObservationSet(testfile):
@@ -109,11 +121,11 @@ def getSolutionTags(prob, prev, TAGS, observations):
     startIdx = np.argmax(prob[-1])
     # solutions.insert(0, TAGS[startIdx])
     backtrack = [startIdx]
-    for i in range(len(prob)-1, -1):
+    for i in range(len(prob)-1, 0, -1):
         idx = backtrack[0]
         solutions.insert(0, TAGS[idx])
         prevTagIdx = prev[i][idx]
-        backtrack.insert(0, prevTagIdx)
+        backtrack.insert(0, int(prevTagIdx))
         # string the result
         temp = f'{observations[i]} : {TAGS[idx]}\n'
         solString = temp + solString        
@@ -184,32 +196,32 @@ if __name__ == '__main__':
     ################################################### Sentence/Lines Initializer ##########################################################################################
 
     # divide the training set into sentences
-    # for trainingList in args.inputfiles:
-    f = open(training_list) # OPEN THE TRAINING FILE: NEEED TO FIX THIS
-    lines = f.readlines()
+    for trainingFile in training_list:
+        f = open(trainingFile) # OPEN THE TRAINING FILE: NEEED TO FIX THIS
+        lines = f.readlines()
 
-    s = []
-    all_sentences = []
-    for i, l in enumerate(lines):
-        l = l.rstrip()
-        # base case: the word is a colon
-        if l[0] == ':':
+        s = []
+        all_sentences = []
+        for i, l in enumerate(lines):
             l = l.rstrip()
-            word = l[0] #the colon word
-            l = l[1:] # without the colon
-            l = l.split(":")
-            l[0] = word
-            l = [x.strip() for x in l]
-        else:
-            l = l.split(':')
-            l = [x.strip() for x in l]
-        lines[i] = l
-        s.append(l)
-        if l[0] in ['.', '?', '!', '...']:
-            all_sentences.append(s)
-            s = []
-    if s != []:
-        all_sentences.append(s) 
+            # base case: the word is a colon
+            if l[0] == ':':
+                l = l.rstrip()
+                word = l[0] #the colon word
+                l = l[1:] # without the colon
+                l = l.split(":")
+                l[0] = word
+                l = [x.strip() for x in l]
+            else:
+                l = l.split(':')
+                l = [x.strip() for x in l]
+            lines[i] = l
+            s.append(l)
+            if l[0] in ['.', '?', '!', '...']:
+                all_sentences.append(s)
+                s = []
+        if s != []:
+            all_sentences.append(s) 
 
     initProbs = makeInitialProbabilities(TAGS, tagIdxs, all_sentences)
     transProbs = makeTransitionProbabilities(TAGS, tagIdxs, all_sentences)
@@ -227,5 +239,6 @@ if __name__ == '__main__':
         solution += solString
     
     writeSolution(solution, args.outputfile)
+
 
     

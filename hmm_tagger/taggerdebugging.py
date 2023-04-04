@@ -17,7 +17,7 @@ def makeInitialProbabilities(TAGS, tagIdxs, all_sentences):
 def makeTransitionProbabilities(TAGS, tagIdxs, all_sentences):
     # Matrix implementation
     # prior tag is the row, current tag is the column
-    transProbs = np.zeros((len(TAGS), len(TAGS)))
+    transProbs = np.ones((len(TAGS), len(TAGS)))
     priorCounts = np.zeros((len(TAGS)))
 
     #print(transProbs)
@@ -31,7 +31,8 @@ def makeTransitionProbabilities(TAGS, tagIdxs, all_sentences):
             priorCounts[row_idx] += 1
     for row, count in enumerate(priorCounts):
         if count != 0:
-            transProbs[row] /= count
+            transProbs[row] /= (count+len(TAGS))
+        
     
     return transProbs
 
