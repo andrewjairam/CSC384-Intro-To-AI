@@ -1,0 +1,30 @@
+notes on the checker bot: ORGANIZED IN TERMS OF PRIORITY
+
+0. rules of checkers: if forced to take, take
+2. If you are one square off making a king, always make the king (ONLY ALWAYS IF OPPONENT CANNOT CAPTURE ANYTHING
+	- move it toward strong side (closer to large group of pieces/pieces closer to king)
+1. look for advantageous trades (setup a double/triple capture, trade piece for king)
+	- if we sac for a double capture, sac equal material
+3. set up making a king
+- Prio making king if there are no pieces in front of a given piece
+	- make a king if enemy pieces are behind
+	- Move the king towards the middle > enemy strongside (where most pieces are) and look for 	  		reverse capture
+	- king best move is ALWAYS loking for reverse capture (?)
+- Look for forks(especially reverse taking w/ king)
+- look for trades that allow us to make a king
+- look for trades that setup a double capture
+- Look for trades that trade reg piece for king
+- If advantages can be made from trapping, trap
+- prioritize taking pieces closer to kinging
+
+- prefer moving towards the opponent 
+
+
+- In neutral: prioritize moving to defended/safe spots *** when nothign better to do
+	- prioritize putting enemy pieces in check w/ safe move
+	- safe moves that threaten promotion
+
+"Good" position
+- checkers one tile off from kinging
+- positions that can get a 2 for 1 trade or 3 for 1 trade
+- If we are up material we want to defend more than attack
