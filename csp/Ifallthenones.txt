@@ -1,0 +1,41 @@
+[['.', 'S', '.', '.', '.', 'S'], 
+['.', '.', '.', '.', '.', '.'], 
+['.', 'M', 'M', 'M', '.', 'S'],
+ ['.', '.', '.', '.', '.', '.'],
+ ['^', '.', '<', 'M', '.', '.'],
+ ['v', '.', '.', '.', '.', '.']]
+
+# water above and below: right has to be M or >
+IfAllThenOne('placeholder', [ varn[str(i*size+j)], varn[str((i-1)*size+j)], varn[str((i+1)*size+j)] ], [ varn[str(i*size+j+1)] ], ['M', '.', '.'], ['M', '>'])
+IfAllThenOne('placeholder', [(i,j), (i-1,j), (i+1,j)], [(i, j+1)], ['M', '.', '.'], ['M', '>'])
+# left also has to be M or < 
+IfAllThenOne('placeholder', [(i,j), (i-1,j), (i+1,j)], [(i, j-1)], ['M', '.', '.'], ['M', '<'])
+IfAllThenOne('placeholder', [ varn[str(i*size+j)], varn[str((i-1)*size+j)], varn[str((i+1)*size+j)] ], [ varn[str(i*size+j-1)] ], ['M', '.', '.'], ['M', '<'])
+
+# Ending ships: M on home square and M to the right: left is <
+IfAllThenOne('placeholder', [(i,j), (i, j+1)], [(i, j-1)], ['M', 'M'], ['<'])
+IfAllThenOne('placeholder', [ varn[str(i*size+j)], varn[str(i*size+j+1)] ], [varn[i*size+j-1]], ['M', 'M'], ['<'])
+# M on home square and M to the left: right is > 
+IfAllThenOne('placeholder', [(i,j), (i, j-1)], [(i, j+1)], ['M', 'M'], ['>'])
+IfAllThenOne('placeholder', [ varn[str(i*size+j)], varn[str(i*size+j-1)] ], [varn[i*size+j+1]], ['M', 'M'], ['>'])
+
+# water left and right: top has to be ^ or M and bot has to be v or M
+IfAllThenOne('placeholder', [(i,j), (i, j-1), (i, j+1)], [(i-1, j)], ['M', '.', '.'], ['M', '^'])
+IfAllThenOne('placeholder', [ varn[str(i*size+j)], varn[str(i*size+j-1)], varn[str(i*size+j+1)] ], [ varn[str((i-1)*size+j) ], ['M', '.', '.'], ['M', '^'])
+and bot has to be v or M
+IfAllThenOne('placeholder', [(i,j), (i, j-1), (i, j+1)], [(i+1, j)], ['M', '.', '.'], ['M', 'v'])
+IfAllThenOne('placeholder', [ varn[str(i*size+j)], varn[str(i*size+j-1)], varn[str(i*size+j+1)] ], [ varn[str((i+1)*size+j) ], ['M', '.', '.'], ['M', 'v'])
+
+# M on home and M above: bottom = v
+IfAllThenOne('placeholder', [(i,j), (i-1, j)], ['M', 'M'], [(i+1, j)], ['v'])
+IfAllThenOne('placeholder', [ varn[str(i*size+j)], varn[str((i-1)*size+j)] ], ['M', 'M'], [ varn[str((i+1)*size+j) ], ['v']) 
+# M on home and M below: top = ^
+IfAllThenOne('placeholder', [(i,j), (i+1, j)], ['M', 'M'], [(i-1, j)], ['^'])
+IfAllThenOne('placeholder', [ varn[str(i*size+j) ], varn[str((i+1)*size+j)] ], ['M', 'M'], [ varn[str((i-1)*size+j) ], ['^'])
+
+[['.', 'S', '.', 'S', '.', '.'], 
+['.', '.', '.', '.', '.', '.'], 
+['.', '<', 'M', 'M', '.', 'S'], 
+['.', '.', '.', '.', '.', '.'], 
+['^', '.', 'M', '.', '.', 'S'], 
+['v', '.', '.', '.', '.', '.']]

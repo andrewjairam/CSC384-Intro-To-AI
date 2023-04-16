@@ -1,0 +1,123 @@
+conslist.append(TableConstraint('name', home square, square to compare, [sa's]]
+
+# top left, top right, bot left, bot right: all corners have same matching arrangements
+
+[['.', '.'],  ['S', '.'], ['<', '.'], ['>', '.'], ['^', '.'], ['v', '.'], ['M', '.'], ['.', 'S'],['.', '<'], 
+['.', '>'], ['.', '^'], ['.', 'v'], ['.', 'M']]
+
+### top mid
+# possibility for any square
+['.', '.']
+# top mid is S, v, <, >: home square = water
+['.', '.'], ['.', 'S'], ['.', 'v'], ['.', '<'], ['.', '>'], 
+# top mid is ^
+['v', '^'], ['M', '^'], 
+# top mid is M
+['v', 'M'], ['M', 'M']
+# top mid is water
+['S', '.'], ['^', '.'], ['<', '.'], ['>', '.'], ['M', '.']
+# domain
+[ ['.', '.'], ['.', 'M'], ['.', 'S'], ['.', 'v'], ['.', '<'], ['.', '>'], ['v', '^'], ['M', '^'], ['v', 'M'], ['M', 'M'], ['S', '.'], ['^', '.'], ['<', '.'], ['>', '.'], ['M', '.'] ]
+# FORGOT TO ADD
+['.', 'M']
+
+### bot mid checks
+# possibility for any square
+['.', '.'],
+# bot mid is S, ^, <, >: home square = water
+['.', '.'], ['.', 'S'], ['.', '^'], ['.', '<'], ['.', '>'], 
+# bot mid is v
+['^', 'v'], ['M', 'v'],
+# bot mid is M
+['^', 'M'], ['M', 'M'],
+# bot mid is water
+['S', '.'], ['v', '.'], ['<', '.'], ['>', '.'], ['M', '.']
+#domain
+[ ['.', '.'], ['.', 'M'], ['.', 'S'], ['.', '^'], ['.', '<'], ['.', '>'], ['^', 'v'], ['M', 'v'], ['^', 'M'], ['M', 'M'], ['S', '.'], ['v', '.'], ['<', '.'], ['>', '.'], ['M', '.'] ]
+# FORGOT TO ADD
+['.', 'M']
+
+# mid left checks
+# possibility for any square
+['.', '.'],
+# mid left is S, >, ^, v: home square = water
+['.', '.'], ['.', 'S'], ['.', '>'], ['.', '^'], ['.', 'v'], 
+# mid left is <
+['>', '<'], ['M', '<'], 
+# mid left is M
+['>', 'M'], ['M', 'M']
+# mid left is water
+['S', '.'], ['<', '.'], ['^', '.'], ['v', '.'], ['M', '.']
+# domain
+[ ['.', '.'], ['.', 'M'], ['.', 'S'], ['.', '>'], ['.', '^'], ['.', 'v'], ['>', '<'], ['M', '<'], ['>', 'M'], ['M', 'M'], ['S', '.'], ['<', '.'], ['^', '.'], ['v', '.'], ['M', '.'] ]
+# FORGOT TO ADD
+['.', 'M']
+
+# mid right checks
+# possibility for any square
+['.', '.'],
+# mid right is S, <, ^, v: home square = water
+['.', '.'], ['.', 'S'], ['.', '<'], ['.', '^'], ['.', 'v'], 
+# mid right is >
+['<', '>'], ['M', '>'], 
+# mid right is M
+['<', 'M'], ['M', 'M'],
+# mid right is water
+['S', '.'], ['>', '.'], ['^', '.'], ['v', '.'], ['M', '.']
+# domain
+[ ['.', '.'], ['.', 'M'], ['.', 'S'], ['.', '<'], ['.', '^'], ['.', 'v'], ['<', '>'], ['M', '>'], ['<', 'M'], ['M', 'M'], ['S', '.'], ['>', '.'], ['^', '.'], ['v', '.'], ['M', '.'] ]
+# FORGOT TO ADD
+['.', 'M']
+
+
+
+####################################################### BASE CASES ##################################################################
+
+corners
+- remove all ['M', 'x'] cases where x is anything
+top row
+bot row
+left col
+right col
+
+
+
+
+
+
+
+IfAllThenOneConstraint('placeholder', [varn[str(i*size+j)], varn[str((i-1)*size+j)], varn[str((i+1)*size+j)]], [varn[str(i*size+j+1)]], ['M', '.', '.'], ['M', '>'])
+
+implies
+- _ls[i] = _lv[i] for i in range(3)
+- _rs[0] = 'M' or '>'
+
+def hasSupport(self, var, val):
+	'''check if var=val has an extension to an assignment of all variables in
+           constraint's scope that satisfies the constraint. Important only to
+           examine values in the variable's current domain as possible extensions'''
+
+	if var not in self.scope():
+		return True
+	if var in _ls:
+		var_idx = _ls.index(var)
+		if _lv[var_idx] != val:
+			continue
+		found = True
+	elif var in _rs:
+		if val not in _rv:
+			continue
+		found = True
+	# if the assignment has potential, iterate through the scope EXCLUDING var and check if everything has a 	compatible value in its domain
+	# Exclude var because we are now 'assigning' var=val, and checking if the rest of the scope satisfies
+	for i, v in enumerate(self.scope()): # scope = _ls + _rs
+		if 
+	
+
+
+	for i, left_var in enumerate(self._ls):
+
+
+
+
+
