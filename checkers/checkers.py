@@ -873,3 +873,6 @@ if __name__ == '__main__':
     sys.stdout = sys.__stdout__
 
     solve(state)
+    
+    #NOTE: TO RUN FILE:
+    #    python3 checkers.py --inputfile <input file> --outputfile <output file>
